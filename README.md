@@ -1,2 +1,1 @@
-# memo
-General Note
+### 日常工作中的一些知识备忘
