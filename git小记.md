@@ -10,4 +10,5 @@
 > * `git diff $file` //查看文件差异
 > * `git log --pretty=oneline` //查看最近到最远的提交日志
 > * `git clone -b release-1.6.0 https://github.com/goharbor/harbor.git` //指定分支
+> * `git mv test.go Golang/` //mv code file to dest dir;first create the dest dir, and finally commit the changes;
 
