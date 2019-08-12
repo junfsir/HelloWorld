@@ -24,4 +24,5 @@ refer：
 [IPVS-Based In-Cluster Load Balancing Deep Dive](https://kubernetes.io/blog/2018/07/09/ipvs-based-in-cluster-load-balancing-deep-dive/)
 
 [Kubelet从1.7.16升级到1.9.11，Sandbox以外的容器都被重建的问题调查](https://www.lijiaocn.com/%E9%97%AE%E9%A2%98/2019/01/14/kubelet-updates-container-restart.html)
+
 [Upgrade kubelet from v1.11.3 to v.12.3 without draining pods causes containers to restart continuously](https://github.com/kubernetes/kubernetes/issues/72296)
