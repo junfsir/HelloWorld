@@ -1,1 +1,1 @@
-### 日常工作中的一些知识备忘
+### Some note in my work.
