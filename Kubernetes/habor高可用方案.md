@@ -507,7 +507,7 @@ def pbkdf2_bin(data, salt, iterations=4096, keylen=16, hashfunc=None):
             rv = starmap(xor, izip(rv, u))
         buf.extend(rv)
     return ''.join(map(chr, buf))[:keylen]
-rv = pbkdf2_hex('Liujunfeng@201*', 'bqkaoihidlteezrbeepe03luw5aws3q7', 4096, 16)
+rv = pbkdf2_hex('username', 'bqkaoihidlteezrbeepe03luw5aws3q7', 4096, 16)
 print(rv)
 
 ```
