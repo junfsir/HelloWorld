@@ -91,6 +91,26 @@ func (kl *Kubelet) syncLoopIteration(configCh <-chan kubetypes.PodUpdate ......)
 }
 ```
 
+`syncLoopIteration`函数有一个简单的处理逻辑，监听多个通道。一旦从通道获取到事件类型，就调用相关函数去处理事件，以下是对不同事件的处理：
+
+1. 从`configCh`获取`Pod`配置变更，然后基于变更类型调用相关函数。例如，如果新`Pods`绑定到本地节点，则将调用`HandlePodAdditions`函数来处理这些`Pods`；如果某些`Pods`的配置发生变更，则调用`HandlePodUpdates`函数来升级这些`Pods`；
+2. 如果容器的状态发生变更（如一个新容器被创建、启动），`PodlifecycleEvent`将发送到`plegCh`通道。事件包括`ContainerStarted`、容器ID以及容器所属`Pod`的ID等类型。然后，`SyncLoopIteration`将调用`HandlePodSyncs`来同步`Pod`配置；
+3. `syncCh`实际上是一个计时器，默认情况下，`kubelet`每秒会触发该计时器来同步`Pod`的配置。
+4. 在初始化过程中，`kubelet`会创建一个`livenessManager`来检查所有已配置`Pod`的健康状态。如果`kubelet`检查到`Pod`运行错误，会调用`HandlePodSyncs`同步`Pod`。此部分会在后面详述；
+5. `houseKeepingCh` 也是一个计时器。默认情况下，`kubelet`每2秒触发一次并调用`HandlePodCleanups` 函数进行处理。这是一种以一定间隔回收已停止`Pod`资源的周期清理机制；
+
+![](https://yqintl.alicdn.com/5920b65f95519c9400e2e5bddded1b9a2f7c7f3f.png)
+
+如上图所示，多数处理函数的执行路径是类似的，包括`HandlePodAdditions`, `HandlePodUpdates`，而且`HandlePodSyncs`在完成自己的操作后会调用`dispatchWork`。若`dispatchWork`函数检测到`Pod`是非`Terminated`状态且需要同步，会调用`podWorkers`的`Update`方法来升级`Pod`。我们可以将`Pod`的创建、更新或同步过程视为从运行到期望状态的转换。
+
+
+
+
+
+
+
+
+
 
 
 
