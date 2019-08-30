@@ -2,7 +2,9 @@
 > * `git config --global user.name 'junfsir'` //git全局配置
 > * `git config --global user.email 'xxx@gmail.com'` //git全局配置
 > * `git clone https://github.com/junfsir/memo.git`
-> * `git remote add memo https://github.com/junfsir/memo.git`
+> * `git remote` //[远程仓库管理]查看已经存在的远程分支
+> * `git remote -v` //查看已经存在的远程分支详情
+> * `git remote add memo https://github.com/junfsir/memo.git` //添加远程仓库
 > * `git add gc分析.md` //添加本地文件到仓库
 > * `git commit -m 'test'` //对本次提交的说明
 > * `git push memo  master` //push到GitHub
