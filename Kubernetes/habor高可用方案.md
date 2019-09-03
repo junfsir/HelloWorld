@@ -226,7 +226,7 @@ services:
 
 ```shell
 cat ./db/env
-POSTGRES_PASSWORD=10jqka@123
+POSTGRES_PASSWORD=PASSWORD
 
 vim pg_hba.conf
 # IPv4 local connections:
@@ -308,6 +308,9 @@ postgres# CREATE ROLE replica login replication encrypted password 'replica';
 配置允许用户远程登录；
 vim pg_hba.conf
 host    replication     replica     192.168.216.101/32                 trust
+slave配置：
+postgresql.conf
+hot_standby = on
 slave启动后执行；
 pg_basebackup -F p --progress -D $PGDATA -h 192.168.216.216 -p 5432 -U replica --password
 ```
