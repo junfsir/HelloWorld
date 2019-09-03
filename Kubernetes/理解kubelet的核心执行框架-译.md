@@ -101,9 +101,38 @@ func (kl *Kubelet) syncLoopIteration(configCh <-chan kubetypes.PodUpdate ......)
 
 ![](https://yqintl.alicdn.com/5920b65f95519c9400e2e5bddded1b9a2f7c7f3f.png)
 
-如上图所示，多数处理函数的执行路径是类似的，包括`HandlePodAdditions`, `HandlePodUpdates`，而且`HandlePodSyncs`在完成自己的操作后会调用`dispatchWork`。若`dispatchWork`函数检测到`Pod`是非`Terminated`状态且需要同步，会调用`podWorkers`的`Update`方法来升级`Pod`。我们可以将`Pod`的创建、更新或同步过程视为从运行到期望状态的转换。
+如上图所示，多数处理函数的执行路径是类似的，包括`HandlePodAdditions`, `HandlePodUpdates`，而且`HandlePodSyncs`在完成自己的操作后会调用`dispatchWork`。若`dispatchWork`函数检测到`Pod`是非`Terminated`状态且需要同步，会调用`podWorkers`的`Update`方法来升级`Pod`。我们可以将`Pod`的创建、更新或同步过程视为从运行到期望状态的转换，以此来帮我们理解`Pod`的升级和同步过程。拿`Pod`的创建来说，我们可以认为新`Pod`的当前状态是空的，并且也可以认为是一个状态转换过程。因此，在`Pod`创建、更新或同步过程中，只用通过调用`Update`函数才能将`Pod`的状态可以变更到目标状态。
 
+`podWorkers`创建于初始化过程中，如下所示：
 
+```go
+// kubernetes/pkg/kubelet/pod_workers.go
+type podWorkers struct {
+    ...
+    podUpdates map[types.UID]chan UpdatePodOptions
+
+    isWorking map[types.UID]bool
+
+    lastUndeliveredWorkUpdate map[types.UID]UpdatePodOptions
+
+    workQueue queue.WorkQueue
+
+    syncPodFn syncPodFnType
+    
+    podCache kubecontainer.Cache
+    ...
+}
+```
+
+`kubelet`为每个已创建的`Pod`配置了一个`pod worker`，其本质上是一个`goroutine`，其创建了一个`buffer size`为1且类型为`UpdatePodOptions（Pod更新事件）`的`channel`，监听该`channel`来获取pod更新事件，并且调用在`podWorkers`的`syncPodFn`字段中的特定函数来执行同步。
+
+另外，`pod worker`注册`channel`到`podWorkers`的`podUpdates map`中，以便指定的更新事件可以发送到相应的`pod worker`进行处理。
+
+如果正在处理当前事件过程中又产生了其他的更新事件，那会发生什么呢？`podWorkers`将最近的事件缓存到`lastUndeliveresWorkUpdate`，然后在处理完当前事件后便立即进行处理。
+
+每次处理更新事件时，`pod worker`都会将处理后的Pod添加到`podWorkers`的`workQueue`，并插入额外的延时。只有在延时到期时，才会在队列中检索`pod`，并执行下一次同步操作。之前已经提到，`syncCh`每秒触发一次来收集需要在当前节点上同步的`Pod`，然后调用`HandlePodSyncs`来执行同步。这些`Pod`在当前时间点过期并从`workQueue`中获取。然后，整个`pod`同步过程形成一个环，如下所示：
+
+![](https://yqintl.alicdn.com/40480a1dd8d0ead1bbc17e11d5c2a47fcbccf5c5.png)
 
 
 
