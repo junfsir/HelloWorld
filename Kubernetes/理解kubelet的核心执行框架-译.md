@@ -134,9 +134,60 @@ type podWorkers struct {
 
 ![](https://yqintl.alicdn.com/40480a1dd8d0ead1bbc17e11d5c2a47fcbccf5c5.png)
 
+创建`podWorkers`对象时，Kubelet用它自己的`syncPod`方法来初始化`syncPodFn`。然而，此方法仅用来做同步的准备工作。例如，它将上传最近的Pod状态到Apiserver，为Pod创建专有的目录，并为Pods获取所需的secrets。然后，Kubelet调用它自己containerRuntime的SyncPod方法来进行同步。containerRuntime抽象了Kubelet的底层容器运行，并定义了容器运行的各种接口。SyncPod就是其中之一。
 
+Kubelet不执行任何容器相关的操作。Pod同步本质上是其状态的变更。实现容器状态变更必须调用、运行底层如PouchContainer等容器。
 
+以下描述了containerRuntime的SyncPod方法来展示真正的同步操作：
 
+```go
+// kubernetes/pkg/kubelet/kuberuntime/kuberuntime_manager.go
+func (m *kubeGenericRuntimeManager) SyncPod(pod *v1.Pod, _ v1.PodStatus, podStatus *kubecontainer.PodStatus, pullSecrets []v1.Secret, backOff *flowcontrol.Backoff) (result kubecontainer.PodSyncResult)
+```
+
+此函数首先调用`computePodActions(pod, podStatus)`来比对当前的Pod状态podStatus和目标Pod状态pod，计算需要的同步操作。计算完成之后，将返回如下所示的PodActions对象：
+
+```go
+// kubernetes/pkg/kubelet/kuberuntime/kuberuntime_manager.go
+type podActions struct {
+    KillPod bool
+    
+    CreateSandbox bool
+    
+    SandboxID string
+    
+    Attempt uint32
+    
+    ContainersToKill map[kubecontainer.ContainerID]containerToKillInfo
+    
+    NextInitContainerToStart *v1.Container
+    
+    ContainersToStart []int
+}
+```
+
+PodActions实际上是一个操作列表：
+
+1. 通常来说，KillPod和CreateSandbox的值是相同的，指定是否kill当前Pod sandbox（如果要创建一个新pod，则该操作为null）并创建一个新的sandbox；
+2. SandboxID来辨识Pod创建操作。如果此值为null，则是第一次创建此Pod；若此值不为空，则在kill掉老的sandbox之后创建新的sandbox；
+3. Attempt指定Pod重建sandbox的次数。初次创建Pod时，此值为0，它和SandboxID有相同的函数；
+4. ContainersToKill辨识因配置变更或健康检测失败后需要被kill的Pod；
+5. 如果运行中或者初始化过程中Pod的容器出现errors，NextInitContainerToStart指定接下来的初始化容器将被创建，创建并启动该init container，同步操作才算完成；
+6. 若Pod sandbox已完成创建且init container也已完成，则根据ContainersToStart启动尚未运行的普通containers；
+
+通过这样一个操作列表，剩下的SyncPod操作就简单了。即仅仅需要调用相关的底层container running接口来一步步执行新增或者删除操作来完成同步。
+
+综述Pod的同步过程即是：当Pod的期望状态变更或者同步超时，则触发同步操作。同步就是比对当前container的状态和其期望状态，生成一个container启动/停止列表，并基于此列表调用底层container运行时接口启动或者停止container。
+
+### 结论
+
+如果container是一个进程，Kubelet则是一个面向container的进程监控。Kubelet的工作就是持续改变本地node的Pod运行状态以使其处于期望的状态。在转换过程中，不需要的container被删除并创建、配置新的container。现有container没有重复的修改、启动或停止操作。这就是所有关于Kubelet的核心处理逻辑。
+
+### Note
+
+1. The source code in this article is from Kubernetes v1.9.4, commit: bee2d1505c4fe820744d26d41ecd3fdd4a3d6546
+2. For detailed comments about Kubernetes source code, visit [my GitHub page](https://github.com/YaoZengzeng/kubernetes).
+3. Reference: [What even is a kubelet?](http://kamalmarhubi.com/blog/2015/08/27/what-even-is-a-kubelet/)
 
 
 
