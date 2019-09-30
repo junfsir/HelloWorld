@@ -36,6 +36,6 @@
 ### 部署ss服务
 
 ```shell
-# docker run -dt --restart=always --name ssserver -p 443:443 mritd/shadowsocks -s "-s 0.0.0.0 -p 443 -m aes-256-cfb -k jeason_123*& --fast-open"
+# docker run -dt --restart=always --name ssserver -p 443:443 mritd/shadowsocks -s "-s 0.0.0.0 -p 443 -m aes-256-cfb -k xxx --fast-open"
 ```
 
