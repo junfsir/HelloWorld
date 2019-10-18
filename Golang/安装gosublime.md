@@ -31,3 +31,6 @@ GOROOT：GoLang安装包dir；
 */
 ```
 
+**离线安装**
+
+从github下载源码包，将其解压至` Preferences -> Browse Packages `即可；
