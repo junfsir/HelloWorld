@@ -39,3 +39,8 @@
 # docker run -dt --restart=always --name ssserver -p 443:443 mritd/shadowsocks -s "-s 0.0.0.0 -p 443 -m aes-256-cfb -k xxx --fast-open"
 ```
 
+
+
+参考：
+
+[Google BBR是什么？以及在 CentOS 7 上如何部署](https://tech.jandou.com/CentOS7-Google-BBR.html)
