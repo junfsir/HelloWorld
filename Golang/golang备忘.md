@@ -1,7 +1,8 @@
-	指针：
-		指针是一种存储变量内存地址（Memory Address）的变量；
-		指针变量的类型为 *T，该指针指向一个 T 类型的变量；
-		& 操作符用于获取变量的地址；
+1. **指针**
+
+	指针是一种存储变量内存地址（Memory Address）的变量；
+	指针变量的类型为 *T，该指针指向一个 T 类型的变量；
+	& 操作符用于获取变量的地址；
 	
 	* 号用于指定变量是作为一个指针；
 	  在指针类型前面加上 * 号（前缀）来获取指针所指向的内容；
@@ -9,33 +10,23 @@
 	* 会出现在两个内容上：
 		一个是类型， * Type 这样的格式代表了一个指针类型；
 		一个是指针， * Pointer 这样的格式用于获取指针所对应的基本值；
-		
-	[]string{}：空数组
-	[]T：切片
-	[#]T：数组
-	interface{}，它表示空interface，按照Golang的Duck Type继承方式，任何类都是空接口的子类；
-	
-	struct{}：空类型和其他类型一样，是一个结构类型，不会占用存储空间
-	
-	struct{}：一种类型，即是结构体类型；
-	struct{}{}：是一个空结构体以默认的方式生成的实例；
 
+	2. **数据结构**
 
-​	
-​	作为函数参数时，Array传递的是数组的副本，而Slice传递的是指针；
+```shell
+[]string{}：空数组
+[]T：切片
+[#]T：数组
+interface{}，它表示空interface，按照Golang的Duck Type继承方式，任何类都是空接口的子类；
+作为函数参数时，Array传递的是数组的副本，而Slice传递的是指针；
 
+struct{}：空类型和其他类型一样，是一个结构类型，不会占用存储空间
 
-​	sync.WaitGroup：在所有goroutine执行完成之前，阻塞主线程的执行；
-​	sync.Mutex和sync.RWMutex：为临界区添加互斥锁；
-​	
-​	从GitHub下载依赖包到src，一般是$GOPATH的src目录，$GOROOT是go的安装目录；
-​		go get github.com/gorilla/websocket
-​	从GitHub下载源码修改后，编译时先将vender下的代码包拷贝到src目录下；
-​	
-​	参数解析：flag
+struct{}：一种类型，即是结构体类型；
+struct{}{}：是一个空结构体以默认的方式生成的实例；
+```
 
-
-常用的值类型和引用类型
+3. **常用的值类型和引用类型**
 
 | Value Types | Reference Types |
 | :---------: | :-------------: |
@@ -45,9 +36,7 @@
 |    bool     |    pointers     |
 |   structs   |    functions    |
 
-
-
-什么情况下使用指针：
+4. **什么情况下使用指针：**
 
 - 如果receiver是`map`、`func`或者`chan`，不要使用指针
 - 如果receiver是`slice`并且该函数并不会修改此slice，不要使用指针
@@ -57,6 +46,56 @@
 - 如果receiver是`struct`，`array`或者`slice`，并且其中某个element指向了某个可变量，则这个时候receiver选指针会使代码的意图更加明显
 - 如果receiver使较小的`struct`或者`array`，并且其变量都是些不变量、常量，例如`time.Time`，value receiver更加适合，因为value receiver可以减少需要回收的垃圾量。
 - **最后，如果不确定用哪个，使用指针类的receiver**
+
+5. **sync标准库**
+
+> 	sync.WaitGroup：在所有goroutine执行完成之前，阻塞主线程的执行；
+> 	sync.Mutex和sync.RWMutex：为临界区添加互斥锁；
+
+6. **context**
+
+控制并发有两种经典的方式，一种是WaitGroup，另外一种就是Context；
+
+WaitGroup是一种控制并发的方式，控制多个goroutine同时完成；尤其适用于，好多个goroutine协同做一件事情的时候，因为每个goroutine做的都是这件事情的一部分，只有全部的goroutine都完成，这件事情才算是完成，这是等待的方式；
+
+Context，称之为上下文，是goroutine的上下文；
+
+7. **解决包下载问题**
+
+```shell
+$ go get -v github.com/gohugoio/hugo
+github.com/gohugoio/hugo (download)
+...
+github.com/spf13/nitro (download)
+Fetching https://golang.org/x/sync/errgroup?go-get=1
+https fetch failed: Get https://golang.org/x/sync/errgroup?go-get=1: dial tcp 216.239.37.1:443: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
+package golang.org/x/sync/errgroup: unrecognized import path "golang.org/x/sync/errgroup" (https fetch: Get https://golang.org/x/sync/errgroup?go-get=1: dial tcp 216.239.37.1:443: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.)
+github.com/cpuguy83/go-md2man (download)
+github.com/spf13/fsync (download)
+```
+
+解决思路：
+
+在`$GOPATH/src`路径下创建`golang/x`，`cd`到指定路径下`git`即可；
+
+```shell
+mkidr -p ~/go/src/golang.org/x
+cd ~/go/src/golang.org/x
+git clone https://github.com/golang/sync.git
+go get -v github.com/gohugoio/hugo
+```
+
+
+
+
+
+
+
+
+
+​	从GitHub下载依赖包到src，一般是$GOPATH的src目录，$GOROOT是go的安装目录；
+​		go get github.com/gorilla/websocket
+​	从GitHub下载源码修改后，编译时先将vender下的代码包拷贝到src目录下；
 
 ---
 
@@ -105,57 +144,3 @@
 > 值的类型给编译器提供两部分信息：第一部分，需要分配多少内存给这个值（即值的规模）；第二部分，这段内存表示什么。对于许多内置类型的情况来说，规模和表示是类型名的一部分。int64 类型的值需要 8 字节（64 位），表示一个整数值；float32 类型的值需要 4 字节（32 位），表示一个 IEEE-754 定义的二进制浮点数；bool 类型的值需要 1 字节（8 位），表示布尔值 true和 false。
 
 
-
-```shell
-$ go get -v github.com/gohugoio/hugo
-github.com/gohugoio/hugo (download)
-...
-github.com/spf13/nitro (download)
-Fetching https://golang.org/x/sync/errgroup?go-get=1
-https fetch failed: Get https://golang.org/x/sync/errgroup?go-get=1: dial tcp 216.239.37.1:443: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
-package golang.org/x/sync/errgroup: unrecognized import path "golang.org/x/sync/errgroup" (https fetch: Get https://golang.org/x/sync/errgroup?go-get=1: dial tcp 216.239.37.1:443: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.)
-github.com/cpuguy83/go-md2man (download)
-github.com/spf13/fsync (download)
-```
-
-解决思路：
-
-在`$GOPATH/src`路径下创建`golang/x`，`cd`到指定路径下`git`即可；
-
-```shell
-mkidr -p ~/go/src/golang.org/x
-cd ~/go/src/golang.org/x
-git clone https://github.com/golang/sync.git
-go get -v github.com/gohugoio/hugo
-```
-
-
-
-```shell
-export https_proxy=http://hexin:hx300033@192.168.0.1:88
-export http_proxy="http://hexin:hx300033@192.168.0.1:88"
-git config --global http.proxy "http://hexin:hx300033@192.168.0.1:88"
-git config --global https.proxy "http://hexin:hx300033@192.168.0.1:88"
-git config http.proxy
-```
-
-以mac为例， 在命令行 Terminal 中设置网络代理，一般方法如下：
-
-```shell
-root@ed27c545f7af:~# cat ~/proxy.conf 
-export http_proxy=http://172.17.42.1:8118
-export https_proxy=$http_proxy
-export ftp_proxy=$http_proxy
-export rsync_proxy=$http_proxy
-export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
-```
-
----
-
-#### context
-
-控制并发有两种经典的方式，一种是WaitGroup，另外一种就是Context；
-
-WaitGroup是一种控制并发的方式，控制多个goroutine同时完成；尤其适用于，好多个goroutine协同做一件事情的时候，因为每个goroutine做的都是这件事情的一部分，只有全部的goroutine都完成，这件事情才算是完成，这是等待的方式；
-
-Context，称之为上下文，是goroutine的上下文；
