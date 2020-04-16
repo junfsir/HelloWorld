@@ -1,4 +1,4 @@
-以处理处于 `Terminating` 的 `namespaces` 为例，删除`finalizers`对应的值即可：
+在集群的日常维护中，会遇到出于处于 `Terminating` 状态的资源，以处理处于 `Terminating` 的 `namespaces` 为例，删除`finalizers`对应的值即可：
 
 ```shell
 # kubectl edit pvc xxx
