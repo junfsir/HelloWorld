@@ -63,3 +63,22 @@ join集群；
 基于iptables的kube-proxy不兼容，新版本内核子模块做了修改；
 ```
 
+
+
+```shell
+https://www.tigera.io/blog/comparing-kube-proxy-modes-iptables-or-ipvs/
+
+https://kubernetes.io/zh/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+
+# modprobe ip_tables
+https://stackoverflow.com/questions/21983554/iptables-v1-4-14-cant-initialize-iptables-table-nat-table-does-not-exist-d/27129275
+
+# kubectl -n kube-system exec -i kube-proxy-gz57m -- /bin/sh -c "iptables -t nat -N KUBE-MARK-DROP;iptables -t nat -A KUBE-MARK-DROP -j MARK --set-xmark 0x8000/0x8000"
+https://github.com/kubernetes/kubernetes/issues/80462
+```
+
+```shell
+https://blog.tianfeiyu.com/2019/11/18/kube_proxy_ipvs/
+https://blog.tianfeiyu.com/2019/11/06/kube_proxy_iptables/
+```
+
