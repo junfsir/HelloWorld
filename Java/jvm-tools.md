@@ -84,5 +84,4 @@
 |   -permstat    |          以ClassLoader为统计口径显示永久代内存状态           |
 |       -F       | 当虚拟机进程对-dump选项没有响应时，可使用这个选项强制生成dump快照 |
 
-
-
+> 注意：jmap -histo:live pid 执行之后会造成jvm强制执行一次fullGC，在线上环境排查时需谨慎使用！
