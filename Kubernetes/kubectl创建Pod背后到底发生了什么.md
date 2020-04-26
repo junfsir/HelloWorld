@@ -172,8 +172,6 @@ initializers:
           - pods
 ```
 
-复制
-
 通过该配置创建资源对象 `InitializerConfiguration` 之后，就会在每个 Pod 的 `metadata.initializers.pending` 字段中添加 `custom-pod-initializer` 字段。该初始化控制器会定期扫描新的 Pod，一旦在 Pod 的 `pending` 字段中检测到自己的名称，就会执行其逻辑，执行完逻辑之后就会将 `pending` 字段下的自己的名称删除。
 
 只有在 `pending` 字段下的列表中的第一个Initializers可以对资源进行操作，当所有的Initializers执行完成，并且 `pending` 字段为空时，该对象就会被认为初始化成功。
@@ -260,7 +258,6 @@ Infomer 是一种模式，它允许 Controller 查找缓存在本地内存中的
   $ kubectl get <PODNAME> -o go-template='{{range .status.conditions}}{{if eq .type "PodScheduled"}}{{.status}}{{end}}{{end}}'
   ```
 
-  复制
 
 一旦 Scheduler 将 Pod 调度到某个节点上，该节点的 `Kubelet` 就会接管该 Pod 并开始部署。
 
@@ -355,8 +352,6 @@ pause 容器提供了一种方法来管理所有这些命名空间并允许业�
 }
 ```
 
-复制
-
 CNI 插件还会通过 `CNI_ARGS` 环境变量为 Pod 指定其他的元数据，包括 Pod 名称和命名空间。
 
 下面的步骤因 CNI 插件而异，我们以 `bridge` 插件举例：
@@ -396,12 +391,6 @@ CNI 插件还会通过 `CNI_ARGS` 环境变量为 Pod 指定其他的元数据�
 上文所述的创建 Pod 整个过程的流程图如下所示：
 
 ![https://hugo-picture.oss-cn-beijing.aliyuncs.com/what-happens-when-k8s.svg](https://hugo-picture.oss-cn-beijing.aliyuncs.com/what-happens-when-k8s.svg)
-
-
-
-
-
-Kubelet 创建 Pod 的流程
 
 
 
