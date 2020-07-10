@@ -264,6 +264,17 @@ EOF
 # cd /var/lib/kubelet/pki
 # rm -fr kubelet-client-current.pem
 # ln -s kubelet-client.pem kubelet-client-current.pem  
+
+# 另一种重签kubelet证书的方式
+master获取forever token：
+~]# kubeadm token list
+TOKEN                     TTL         EXPIRES   USAGES                   DESCRIPTION   EXTRA GROUPS
+956brl.xf89rpib4q62a12c   <forever>   <never>   authentication,signing   <none>        system:bootstrappers:kubeadm:default-node-token
+
+node 替换/etc/kubernetes/bootstrap-kubelet.conf user token 为forever token
+删除/var/lib/kubelet/pki/下的过期证书
+重启kubelet
+
 ```
 
 4. User ClusterRoleBinding
