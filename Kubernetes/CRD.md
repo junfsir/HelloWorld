@@ -32,9 +32,9 @@ Kubernetes系统内建了许多控制器，如NodeController、ServiceController
 
 Informer主要由Listwatcher、ResourceEventHandler和ResyncPeriod三类函数组件进行构造。
 
-- Listwatcher是应用于特定名称空间中特定资源对象的列表函数（listFunc）和监视函数（watchFunc），并结合字段选择器为控制器精确限定关注的资源对象。
+- Listwatcher是应用于特定名称空间中特定资源对象的列表函数（listFunc）和监视函数（watchFunc），并结合字段选择器为控制器精确限定关注的资源对象。
 
-- ResourceEventHandler负责处理资源对象状态改变产生的相关通知，其分别使用AddFunc、UpdateFunc和DeleteFunc三个函数完成对象的创建、更新和删除操作。
+- ResourceEventHandler负责处理资源对象状态改变产生的相关通知，其分别使用AddFunc、UpdateFunc和DeleteFunc三个函数完成对象的创建、更新和删除操作。
 
 - ResyncPeriod定义控制器遍历缓存中的所有项目并触发运行UpdateFunc的频率，即和解循环的执行频度。较高的频度对于控制器错过某次更新或此前的更新操作执行失败时非常有用，但会对系统资源带来较高的压力，因此具体的时长需要全面、系统地进行权衡。
 
@@ -42,7 +42,7 @@ Informer是控制器的私有组件，它为相关资源对象创建的缓存信
 
 不过，SharedInformer无法跟踪每个控制器的位置（因为它是共享的），于是控制器必须负责提供自用的工作队列及重试机制，这也意味着它的ResourceEventHandler程序只是将事件放在每个消费者的Workqueue中。
 
-- 每当资源发生变化时，ResourceEventHandler程序都会将一个键放入工作队列中，对于名称空间级别资源对象的相关事件，其键名格式为<resource_namespace>/<resource_name>，集群级别资源对象的键名则只包含<resource_name>。
+- 每当资源发生变化时，ResourceEventHandler程序都会将一个键放入工作队列中，对于名称空间级别资源对象的相关事件，其键名格式为<resource_namespace>/<resource_name>，集群级别资源对象的键名则只包含<resource_name>。
 
 - 目前，工作队列存在延迟队列、定时队列和速率限制队列等几种形式
 
