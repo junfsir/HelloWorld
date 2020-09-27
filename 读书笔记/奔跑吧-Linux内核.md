@@ -5,8 +5,19 @@
 20世纪70年代，IBM的John Cocke研究发现，处理器提供的大量指令集和复杂寻址方式并不会被编译器生成的代码用到：20%的简单指令经常被用到，占程序总指令数的80%，而指令集里其余80%的复杂指令很少被用到，只占程序总指令数的20%。基于这种思想，将指令集和处理器进行重新设计，在新的设计中只保留了常用的简单指令，这样处理器不需要浪费太多的晶体管去做那些很复杂又很少使用的复杂指令。通常，简单指令大部分时间都能在一个cycle内完成，基于这种思想的指令集叫作RISC（Reduced Instruction Set Computer）指令集，以前的指令集叫作CISC（Complex Instruction Set Computer）指令集。
 
 
+## 第二章 内存管理
+页表映射
+伙伴系统
+页面分配器（page allocator）
+虚拟内存和物理内存通过建立页表的方式建立映射关系。
+缺页中断
+salb机制
+页面回收机制
+反向映射机制
+碎片化后内存规整（Memory Compaction）
 
 
+从硬件角度来看内存，RAM是与CPU直接交换数据的内存存储器。现在大部分计算机都是用DDR（Dual Data Rate SDRAM）的存储设备，DDR包括DDR3L、DDR4L、LPDDR3/4等。DDR的初始化一般在BIOS或boot loader中，BIOS或boot loader把DDR的大小传递给内核，因此从Linux角度来看DDR就是一段物理内存空间。
 
 
 
