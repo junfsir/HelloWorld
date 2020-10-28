@@ -10,7 +10,7 @@ Kubernetes将资源再次分组和版本化，形成Group（资源组）、Versi
 
 - Kind：资源种类，描述Resource的种类，与Resource为同一级别。
 
-![Group-Version-Resource核心数据结构](https://github.com/junfsir/HelloWorld/raw/master/images/k8s-source-code/Group-Version-Resource核心数据结构.jpg)
+![Group-Version-Resource核心数据结构](../images/k8s-source-code/Group-Version-Resource核心数据结构.jpg)
 
 Kubernetes系统支持多个Group，每个Group支持多个Version，每个Version支持多个Resource，其中部分资源同时会拥有自己的子资源（即SubResource）。例如，Deployment资源拥有Status子资源。
 

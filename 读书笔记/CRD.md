@@ -6,7 +6,7 @@ Kubernetes API默认提供的众多的功能性资源类型可用于容器编排
 
 CRD并非设计用来取代Kubernetes的原生资源类型，而是用于补充一种简单易用的更为灵活和更高级别的自定义API资源的方式。虽然目前在功能上仍存在不少的局限，但对于大多数的需求场景来说，CRD的表现已经足够好，因此在满足需求的前提下是首选的API资源类型扩展方案。
 
-![创建自定义资源类型及自定义类型的资源对象](https://github.com/junfsir/HelloWorld/raw/master/images/crd/创建自定义资源类型及自定义类型的资源对象.jpg)
+![创建自定义资源类型及自定义类型的资源对象](../images/crd/创建自定义资源类型及自定义类型的资源对象.jpg)
 
 CRD本身也是一种资源类型，隶属于集群级别，实例化出特定的对象之后，它会在API上注册生成GVR类型URL端点，并能够作为一种资源类型被使用并实例化相应的对象。自定义资源类型之前，选定其使用的API群组名称、版本及新建的资源类型名称，根据这些信息即可创建自定义资源类型，并创建自定义类型的资源对象。
 
@@ -16,7 +16,7 @@ CRD本身也是一种资源类型，隶属于集群级别，实例化出特定�
 
 简单来说，控制器负责持续监视资源变动，根据资源的spec及status中的信息执行某些操作逻辑，并将执行结果更新至资源的status中。自定义控制器同样担负着类似的职责，只不过一个特定的控制器通常仅负责管理一部分特定的资源类型，并执行专有管理逻辑。
 
-![Kubernetes核心资源与CRD](https://github.com/junfsir/HelloWorld/raw/master/images/crd/Kubernetes核心资源与CRD.jpg)
+![Kubernetes核心资源与CRD](../images/crd/Kubernetes核心资源与CRD.jpg)
 
 Kubernetes系统内建了许多控制器，如NodeController、ServiceController等，它们打包在一起并作为一个统一守护进程kube-controller-manager。这些控制器基本上都遵循同一种模式以完成资源管理操作，该模式通常可描述为三种特性：声明式API、异步和水平式处理。
 
@@ -28,7 +28,7 @@ Kubernetes系统内建了许多控制器，如NodeController、ServiceController
 
 简单来说，控制器包含两个重要组件：Informer/SharedInformer和Workqueue，前者负责监视资源对象当前状态的更改，并将事件发送至后者，而后由处理函数进行处理。
 
-![处理器事件流动示意图](https://github.com/junfsir/HelloWorld/raw/master/images/crd/处理器事件流动示意图.jpg)
+![处理器事件流动示意图](../images/crd/处理器事件流动示意图.jpg)
 
 Informer主要由Listwatcher、ResourceEventHandler和ResyncPeriod三类函数组件进行构造。
 

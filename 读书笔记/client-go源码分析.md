@@ -40,7 +40,7 @@ vendor/k8s.io/client-go/
 
 `client-go`支持4种Client客户端对象与Kubernetes API Server交互的方式，如图所示：
 
-[Client交互对象](../images/client-go/Client交互对象.png)
+![Client交互对象](../images/client-go/Client交互对象.png)
 
 RESTClient是最基础的客户端，对HTTP Request进行了封装，实现了RESTful风格的API。ClientSet、DynamicSet、DIscoveryClient客户点都是基于RESTClient实现的。
 ClientSet在RESTClient的基础上封装了对Resource和Version的管理方法。每一个Resource可以理解为一个客户端，而ClientSet则是多个客户端的集合，每一个Resource和Version都以函数的方式暴露给开发者。ClientSet只能够处理Kubernetes内置资源，它是通过client-go代码生成器自动生成的。
