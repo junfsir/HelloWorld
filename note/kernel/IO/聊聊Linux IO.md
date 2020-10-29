@@ -17,7 +17,7 @@
 
 
 
-[![img](http://www.0xffffff.org/images/41/storage-arch.png)](http://www.0xffffff.org/images/41/storage-arch.png)
+![img](../../../images/note/kernel/IO/storage-arch.png)
 
 受限于存储介质的存取速率和成本，现代计算机的存储结构呈现为金字塔型[1]。越往塔顶，存取效率越高、但成本也越高，所以容量也就越小。得益于程序访问的局部性原理[2]，这种节省成本的做法也能取得不俗的运行效率。从存储器的层次结构以及计算机对数据的处理方式来看，上层一般作为下层的Cache层来使用（广义上的Cache）。比如寄存器缓存CPU Cache的数据，CPU Cache L1~L3层视具体实现彼此缓存或直接缓存内存的数据，而内存往往缓存来自本地磁盘的数据。
 
@@ -25,7 +25,7 @@
 
 ### 无处不在的缓存
 
-[![img](http://www.0xffffff.org/images/41/cache.png)](http://www.0xffffff.org/images/41/cache.png)
+![img](../../../images/note/kernel/IO/cache.png)
 
 如图，当程序调用各类文件操作函数后，用户数据（User Data）到达磁盘（Disk）的流程如图所示[3]。图中描述了Linux下文件操作函数的层级关系和内存缓存层的存在位置。中间的黑色实线是用户态和内核态的分界线。
 
@@ -39,9 +39,7 @@
 
 这一小节来看Linux内核的IO栈的结构。先上一张全貌图[4]：
 
-[![img](http://www.0xffffff.org/images/41/Linux-storage-stack.png)](http://www.0xffffff.org/images/41/Linux-storage-stack.png)
-
-由图可见，从系统调用的接口再往下，Linux下的IO栈致大致有三个层次：
+![img](../../../images/note/kernel/IO/Linux-storage-stack.png)由图可见，从系统调用的接口再往下，Linux下的IO栈致大致有三个层次：
 
 1. 文件系统层，以 `write(2)` 为例，内核拷贝了`write(2)`参数指定的用户态数据到文件系统Cache中，并适时向下层同步
 2. 块层，管理块设备的IO队列，对IO请求进行合并、排序（还记得操作系统课程学习过的IO调度算法吗？）
@@ -49,7 +47,7 @@
 
 结合这个图，想想Linux系统编程里用到的`Buffered IO`、`mmap(2)`、`Direct IO`，这些机制怎么和Linux IO栈联系起来呢？上面的图有点复杂，我画一幅简图，把这些机制所在的位置添加进去：
 
-[![img](http://www.0xffffff.org/images/41/linux-io.png)](http://www.0xffffff.org/images/41/linux-io.png)
+![img](../../../images/note/kernel/IO/linux-io.png)
 
 这下一目了然了吧？传统的`Buffered IO`使用`read(2)`读取文件的过程什么样的？假设要去读一个冷文件（Cache中不存在），`open(2)`打开文件内核后建立了一系列的数据结构，接下来调用`read(2)`，到达文件系统这一层，发现`Page Cache`中不存在该位置的磁盘映射，然后创建相应的`Page Cache`并和相关的扇区关联。然后请求继续到达块设备层，在IO队列里排队，接受一系列的调度后到达设备驱动层，此时一般使用DMA方式读取相应的磁盘扇区到Cache中，然后`read(2)`拷贝数据到用户提供的用户态buffer中去（`read(2)`的参数指出的）。
 

@@ -35,13 +35,13 @@ Linux和HP-UX的man page分别从两个角度描述了这个指标：Linux着眼
 
 第一张图演示的是，在I/O完全一样的情况下，CPU忙闲状态的变化就能够影响 %iowait 的大小。下图我们看到，在CPU繁忙期间发生的I/O，无论有多少，%iowait 的值都是不受影响的（因为 %iowait 的第一个前提条件就是CPU必须空闲）；当CPU繁忙程度下降时，有一部分I/O落入了CPU空闲的时间段内，这就导致了 %iowait 升高。可见，I/O并没有变化，%iowait 却升高了，原因仅仅是CPU的空闲时间增加了。请记住，系统中有成百上千的进程数，任何一个进程都可以引起CPU和I/O的变化，因为 %iowait、%idle、%user、%system 等这些指标都是全局性的，并不是特指某个进程。
 
-[![iowait](http://linuxperf.com/wp-content/uploads/2015/02/iowait1.png)](http://linuxperf.com/wp-content/uploads/2015/02/iowait1.png)
+![iowait](../../../images/note/kernel/CPU/iowait1.png)
 再往下看第二张图，它描述了另一种情形：假设CPU的繁忙状况保持不变的条件下，即使 %iowait 升高也不能说明I/O负载加重了。
 如果2个I/O请求依次提交、使得整个时段内始终有I/O在进行，那么 %iowait 是100%；
 如果3个I/O请求同时提交，因为系统有能力同时处理多个I/O，所以3个并发的I/O从开始到结束的时间与一个I/O一样，%iowait 的结果只有50%。
 2个I/O使 %iowait 达到了100%，3个I/O的 %iowait 却只有50%，显然 %iowait 的高低与I/O的多少没有必然关系，而是与I/O的并发度相关。所以，仅凭 %iowait 的上升不能得出*I/O负载增加* 的结论。
 
-[![iowait](http://linuxperf.com/wp-content/uploads/2015/02/iowait.png)](http://linuxperf.com/wp-content/uploads/2015/02/iowait.png)
+![iowait](../../../images/note/kernel/CPU/iowait.png)
 
  
 

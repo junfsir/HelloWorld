@@ -157,8 +157,31 @@ GVK和GVR是相互关联的。GVK在GVR标识的http路径下服务。关联GVK�
 
 >  `Resource` 是 `Kind` 在 API 中的标识，通常情况下 `Kind` 和 `Resource` 是一一对应的, 但是有时候相同的 `Kind` 可能对应多个 `Resources`, 比如 Scale Kind 可能对应很多 Resources：deployments/scale 或者 replicasets/scale, 但是在 CRD 中，每个 `Kind` 只会对应一种 `Resource`。
 >
-> `Scheme` 提供了 `GVK` 与对应 Go types(struct) 之间的映射
+> `Scheme` 提供了 `GVK` 与对应 Go types(struct) 之间的映射。
 
-desired state
+#### Kubernetes API版本
 
-current status
+基于扩展性的原因，Kubernetes支持不同路径下的多版本API，例如/api/v1与/apis/extensions/v1beta1。不同的API版本意味着不同级别的稳定性和支持力度：
+
+- Alpha级别（比如v1alpha1）通常默认是关闭的；其支持的特性可能随时被丢弃，仅适合用于短期的测试集群。
+- Beta级别（比如v2beta3）默认是启用的，意味着相关代码经过了充分测试；然而对象的语义可能会以不兼容的方式在后续的beta或者stable版本中改变。
+- Stable（通常可用，或者GA）级别（比如，v1）将会出现在正式软件的很多后续版本中。
+
+> 由于历史原因，核心组位于/api/v1下，而不是在/api/core/v1之下。因为核心组是在引入API Group的概念之前就存在了。
+
+#### 声明式状态（Declarative State）管理
+
+大多数API对象区分specification定义的期望状态（desired state）和对象的当前状态（current status）。specification（简称spec）是对资源的期望状态的完整描述，spec通常会持久化存储，一般存在etcd中。
+
+> 为什么说一般是etcd呢？其实。Kubernetes有发行版和产品，比如k3s或者微软的AKS，这些版本可能使用其他的持久化存储替换了etcd。得益于Kubernetes的模块化架构设计，替换存储也可以工作的很好。
+
+### 第三章 client-go 基础知识
+
+```go
+k8s.io/api //API go类型
+k8s.io/client-go // 提供客户端接口
+k8s.io/apimachinery // 
+```
+
+#### 创建和使用客户端
+

@@ -3,7 +3,7 @@
 内存映射，简而言之就是将用户空间的一段内存区域映射到内核空间，映射成功后，用户对这段内存区域的修改可以直接反映到内核空间，同样，内核空间对这段区域的修改也直接反映用户空间。那么对于内核空间<---->用户空间两者之间需要大量数据传输等操作的话效率是非常高的。
 
 以下是一个把普遍文件映射到用户空间的内存区域的示意图。
-![](https://github.com/junfsir/jNote/raw/master/images/linux-mmap-1.png)
+![](../../../images/note/kernel/memory/linux-mmap-1.png)
 
 二、基本函数
     mmap函数是unix/linux下的系统调用，详细内容可参考《Unix Netword programming》卷二12.2节。
@@ -16,13 +16,12 @@ void * mmap(void *start, size_t length, int prot , int flags, int fd, off_t offs
 
 mmap用于把文件映射到内存空间中，简单说mmap就是把一个文件的内容在内存里面做一个映像。映射成功后，用户对这段内存区域的修改可以直接反映到内核空间，同样，内核空间对这段区域的修改也直接反映用户空间。那么对于内核空间<---->用户空间两者之间需要大量数据传输等操作的话效率是非常高的。
 
-
 原理
 首先，“映射”这个词，就和数学课上说的“一一映射”是一个意思，就是建立一种一一对应关系，在这里主要是只 硬盘上文件 的位置与进程 逻辑地址空间 中一块大小相同的区域之间的一一对应，如图1中过程1所示。这种对应关系纯属是逻辑上的概念，物理上是不存在的，原因是进程的逻辑地址空间本身就是不存在的。在内存映射的过程中，并没有实际的数据拷贝，文件没有被载入内存，只是逻辑上被放入了内存，具体到代码，就是建立并初始化了相关的数据结构（struct address_space），这个过程有系统调用mmap()实现，所以建立内存映射的效率很高。
 
  
 
-![](https://github.com/junfsir/jNote/raw/master/images/linux-mmap-2.gif)
+![](../../../images/note/kernel/memory/linux-mmap-2.gif)
 
  
 
@@ -54,7 +53,7 @@ mmap()会返回一个指针ptr，它指向进程逻辑地址空间中的一个�
 
  
 
- ![](https://github.com/junfsir/jNote/raw/master/images/linux-mmap-3.gif)
+ ![](../../../images/note/kernel/memory/linux-mmap-3.gif)
 
 
 
