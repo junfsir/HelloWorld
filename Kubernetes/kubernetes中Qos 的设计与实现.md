@@ -107,7 +107,7 @@ CPU 最终都会转换为以微秒为单位，memory 会转换为以 bytes 为�
 `-- systemd
 ```
 
-![](https://github.com/junfsir/jNote/raw/master/images/kubernetes/00/00.png)
+![](../images/kubernetes/qos.png)
 
 例如，当创建资源如下所示的 pod：
 

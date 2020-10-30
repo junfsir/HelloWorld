@@ -388,7 +388,7 @@ CNI 插件还会通过 `CNI_ARGS` 环境变量为 Pod 指定其他的元数据�
 
 上文所述的创建 Pod 整个过程的流程图如下所示：
 
-![/what-happens-when-k8s](../images/what-happens-when-k8s.svg)
+![/what-happens-when-k8s](../images/kubernetes/what-happens-when-k8s.svg)
 
 
 

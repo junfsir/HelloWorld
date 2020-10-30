@@ -20,7 +20,7 @@ Kubernetes已有的**Flex Volume**插件机制试图通过为外部存储暴露�
 
 ### CSI存储插件的关键组件
 
-![](https://github.com/junfsir/HelloWorld/raw/master/images/container-storage-interface_diagram1.png)
+![](../images/kubernetes/container-storage-interface_diagram1.png)
 
 其中主要包括两种组件：CSI Controller和CSI Node。
 

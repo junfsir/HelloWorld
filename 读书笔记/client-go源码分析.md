@@ -44,8 +44,9 @@ vendor/k8s.io/client-go/
 
 RESTClient是最基础的客户端，对HTTP Request进行了封装，实现了RESTful风格的API。ClientSet、DynamicSet、DIscoveryClient客户点都是基于RESTClient实现的。
 ClientSet在RESTClient的基础上封装了对Resource和Version的管理方法。每一个Resource可以理解为一个客户端，而ClientSet则是多个客户端的集合，每一个Resource和Version都以函数的方式暴露给开发者。ClientSet只能够处理Kubernetes内置资源，它是通过client-go代码生成器自动生成的。
+
 DynamicClient与ClientSet最大不同之处是，ClientSet仅能访问Kubernetes自带的资源，不能直接访问CRD资源。DynamicClient能够处理Kubernetes中的所有资源，包括Kubernetes内置资源和CRD资源。DynamicClient用于发现kube-apiserver所支持的资源组、资源版本、资源信息（即Group、Versions、Resources）。
----
+
 在Kubernetes系统中，组件之间通过HTTP协议进行通信，在不依赖任何中间件的情况下通过Informer机制保证消息的实时性、可靠性、顺序性。Kubernetes的其他组件都是通过client-go的Informer机制与Kubernetes API Server进行通信的。
 
 每一个Kubernetes资源上都实现了Informer机制，每一个Informer上都会实现Informer和Lister方法。

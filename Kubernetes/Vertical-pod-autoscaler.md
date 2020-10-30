@@ -11,7 +11,7 @@ VPA sets [resource requests](https://kubernetes.io/docs/tasks/configure-pod-cont
 
 For an overview of autoscaling flow please see this (static) diagram. For further information and a dynamic version of vertical autoscaling flow, read.
 
-![Vertical Pod Autoscaler](https://github.com/junfsir/jNote/raw/master/images/vertical-pod-autoscaler.png)
+![Vertical Pod Autoscaler](../images/kubernetes/vertical-pod-autoscaler.png)
 
 ### PREREQUISITES FOR USING VPA
 
@@ -67,7 +67,7 @@ Once VPA is up and running, we need to configure it. A VPA configuration contain
 
 For a **dynamic** overview of how the vertical cluster autoscaler works, please see the diagram below:
 
-![Vertical Pod Autoscaler](https://github.com/junfsir/jNote/raw/master/images/vertical-pod-autoscaler.gif)
+![Vertical Pod Autoscaler](../images/kubernetes/vertical-pod-autoscaler.gif)
 
 We’re going to use the same test application we did in [How to correctly size containers for Java 10 applications](https://banzaicloud.com/blog/java10-container-sizing/). We deploy the test application using:
 
