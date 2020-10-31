@@ -8,7 +8,7 @@
 
 在k8s环境里，容器终止之后概率性地发生弹性网卡残留现象，而且只有privileged容器才有问题，不加privileged就没问题： 
 
-![img](https://ask.qcloudimg.com/http-save/170434/msfk22vxtu.jpeg?imageView2/2/w/1620)
+![img](../../images/note/troubleshooting/msfk22vxtu.jpeg)
 
 这个问题在客户的环境里可以稳定复现，但是在容器团队的测试环境无法复现，给排查问题的过程增加了不少障碍。
 
@@ -45,11 +45,11 @@ cat $SYS_TRACE/trace_pipe
 
  以上ftrace脚本观察到正常场景下，tke-eni-cni进程有主动删除网卡的动作，而发生残留的场景下则没有。主动删除网卡的call trace是这样的：
 
-![img](https://ask.qcloudimg.com/http-save/170434/s91xmpca7l.png?imageView2/2/w/1620)
+![img](../../images/note/troubleshooting/s91xmpca7l.png)
 
 tke-eni-cni进程不主动删除网卡的原因是net namespace已经被删除了，"lsns -t net"已经看不到了，在/var/run/docker/netns下也没了。而且net namespace被删除不应该导致虚拟网卡残留，恰恰相反，理论上net namespace销毁的过程中会自动删除关联的弹性网卡，可以通过以下的简单测试来验证，在客户的系统上验证也是没问题的：
 
-![img](https://ask.qcloudimg.com/http-save/170434/3lhrhxnwau.png?imageView2/2/w/1620)
+![img](../../images/note/troubleshooting/3lhrhxnwau.png)
 
 阅读源代码，看到netns的内核数据结构是struct net，其中的count字段表示引用计数，只有当netns的引用计数归零之后才能执行销毁动作：
 
@@ -207,7 +207,7 @@ crash> struct net.count ffffa043bb9dac00
 
 捕捉到可疑的调用栈如下，auth_rpcgss内核模块中，write_gssp()产生了两次get_net引用，但是容器终止的过程中没有相应的put_net：
 
-![img](https://ask.qcloudimg.com/http-save/170434/k3vj4lnftn.png?imageView2/2/w/1620)
+![img](../../images/note/troubleshooting/k3vj4lnftn.png)
 
 通过strace跟踪gssproxy进程的启动过程，可以看到导致调用write_gssp()的操作是往/proc/net/rpc/use-gss-proxy里写入1：
 
