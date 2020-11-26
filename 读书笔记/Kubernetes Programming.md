@@ -499,3 +499,70 @@ scheme将Golang世界与GVK连接在一起，其主要特性是将Golang类型�
 
 ### 第4章 使用自定义资源
 
+自定义资源（CR）用于小型且没有任何controller逻辑的内部配置对象，完全以声明的方式定义。
+
+自定义资源定义（CRD）本身是一种kubernetes资源，描述了集群中可用的CR。
+
+自定义资源与主要的kubernetes API资源一样，都存储在etcd实例中，并且由同一个kubernetes API server提供服务。如下图所示，请求都会走到apiextensions-apiserver中，该apiserver通常为CRD定义的资源提供服务，但以下两种情形的请求不会走到该apiserver：
+
+- 交由aggregated API  servers处理的资源；
+- kubernetes的原生资源；
+
+![](../images/Kubernetes Programming/apiextensions-apiserver.png)
+
+### 第5章 自动生成代码
+
+```go
+k8s.io/code-generator // Gengo生成器
+
+/*
+https://github.com/programming-kubernetes/cnat
+https://github.com/programming-kubernetes/pizza-crd
+https://github.com/programming-kubernetes/pizza-apiserver
+*/
+```
+
+#### 为什么要生成代码
+
+Go是一种设计简单的语言。它缺乏以通用（即与类型无关）的方式在不通数据类型上表达算法的高级或类似于元编程的机制。“Go的方式”用外部代码生成来解决。
+
+#### 调用生成器
+
+通常，在每个控制器项目中，代码生成器的调用方式几乎相同。只有程序包，组名和API版本不同。调用k8s.io/code-generator/generate-groups.sh或者像hack/update-codegen.sh这样的bash脚本是从构建系统向CR Go类型添加生成代码的最简单方法。
+
+```shell
+# k8s.io/code-generator/generate-groups.sh all \
+    github.com/programming-kubernetes/cnat/cnat-client-go/pkg/generated
+    github.com/programming-kubernetes/cnat/cnat-client-go/pkg/apis \
+    cnat:v1alpha1 \
+    --output-base "${GOPATH}/src" \
+    --go-header-file "hack/boilerplate.go.txt"
+```
+
+下面是生成CR所调用的所有4个代码生成器：
+
+- deepcopy-gen（深拷贝生成器）
+
+ 生成 `func (t *T) DeepCopy() *T`和`func (t *T) DeepCopyInto(*T)`
+
+- client-gen（客户端生成器）
+
+ 创建类型化的客户端集
+
+- informer-gen（通知者生成器）
+
+ 为CR创建通知者informers，以提供基于事件的接口来响应服务器上的CR变更；
+
+- lister-gen（列表器生成器）
+
+为CR创建列表器listers，为GET和LIST请求提供只读缓存层；
+
+
+
+### 第6章 编写Operator的方案
+
+> sample-controller
+>
+> kuberbuilder
+>
+> Operator SDK
