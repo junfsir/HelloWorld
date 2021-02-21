@@ -305,7 +305,7 @@ EOF
 3. [RBAC——基于角色的访问控制]( <https://jimmysong.io/kubernetes-handbook/guide/rbac.html)
 4. [user 证书的签法](https://github.com/xizhibei/blog/issues/64)
 5. [kubelet bootstrap 流程](https://lingxiankong.github.io/2018-09-18-kubelet-bootstrap-process.html)
-6. k8s证书结构： [https://docs.lvrui.io/2018/09/28/%E8%AF%A6%E8%A7%A3kubeadm%E7%94%9F%E6%88%90%E7%9A%84%E8%AF%81%E4%B9%A6/]
+6. [k8s证书结构] (https://docs.lvrui.io/2018/09/28/%E8%AF%A6%E8%A7%A3kubeadm%E7%94%9F%E6%88%90%E7%9A%84%E8%AF%81%E4%B9%A6/)
 7. [详解kubeadm生成的证书](https://docs.lvrui.io/2018/09/28/详解kubeadm生成的证书/)
 8. [证书轮换](https://k8smeetup.github.io/docs/tasks/tls/certificate-rotation/)
 9. [cfssl 用法](https://blog.51cto.com/liuzhengwei521/2120535)
