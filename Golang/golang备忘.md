@@ -159,4 +159,25 @@ type name string   // 类型定义
 
 - `type name = string` 将`name`定义为`string`的一个别名，使用`name`和`string`相同；二者可以当做同一种类型运算；别名只在源码中存在，编译完成后，不会有别名类型；
 
-15. select {}：阻塞main函数使其不退出
+15. select {}：阻塞main函数使其不退出，通常和goroutine一起使用；
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main()  {
+	go func() {
+		for {
+			fmt.Println("hello word")
+			time.Sleep(time.Duration(time.Second))
+		}
+	}()
+  //
+	select {}
+}
+```
+
