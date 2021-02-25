@@ -473,7 +473,7 @@ type ObjectMeta struct {
 
 #### API Machinery进阶
 
-API Machinery代码库实现了kubernetes基础类型系统，但其属于中实际上不存在type属于，它指的是kinds。
+API Machinery代码库实现了kubernetes基础类型系统，但其术语中实际上不存在type，它指的是kinds。
 
 ##### kinds
 
