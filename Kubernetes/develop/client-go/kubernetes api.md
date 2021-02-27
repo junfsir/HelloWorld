@@ -14,7 +14,7 @@
 
 在 Kubernetes 集群中，一个 API 对象在 Etcd 里的完整资源路径，是由：`Group（API 组）`、`Version（API 版本）`和 `Resource（API 资源类型）`三个部分组成的。通过这样的结构，整个 Kubernetes 里的所有 API 对象，实际上就可以用如下的树形结构表示出来：
 
-![https://www.qikqiak.com/k8strain/assets/img/security/api-server-space.png](../../images/k8s-dev/api-server-space.png)
+![https://www.qikqiak.com/k8strain/assets/img/security/api-server-space.png](../../../images/k8s-dev/api-server-space.png)
 
 从上图中我们也可以看出 Kubernetes 的 API 对象的组织方式，在顶层，我们可以看到有一个核心组（由于历史原因，是 `/api/v1` 下的所有内容而不是在 `/apis/core/v1` 下面）和命名组（路径 `/apis/$NAME/$VERSION`）和系统范围内的实体，比如 `/metrics`。我们也可以用下面的命令来查看集群中的 API 组织形式：
 
@@ -149,7 +149,7 @@ metadata:
 
 其中 `Job` 就是这个 API 对象的资源类型 Kind，而资源 Resource 通常为 Kind 的小写复数词，比如这里就是 `jobs`，`batch` 就是它的组（Group），`v1` 就是它的版本（Version），API Group、Version 和资源就唯一定义了一个 HTTP 路径，然后在 kube-apiserver 端对这个 URL 进行了监听，然后把对应的请求传递给了对应的控制器进行处理而已。
 
-![https://bxdc-static.oss-cn-beijing.aliyuncs.com/images/20200714094926.png](../../images/k8s-dev/gvr-rest-path.png)
+![https://bxdc-static.oss-cn-beijing.aliyuncs.com/images/20200714094926.png](../../../images/k8s-dev/gvr-rest-path.png)
 
 > Resource 和 Kind 的区别是什么？需要注意的 Resource 指的是 HTTP Restful API 请求路径中的资源（理解 Restful API 的资源），而 Kind 对应的是系统中真正的实体，这两个是有本质区别的。
 
@@ -157,7 +157,7 @@ metadata:
 
 ## API 请求处理
 
-![https://bxdc-static.oss-cn-beijing.aliyuncs.com/images/k8s-api-request-lifecycle.png](../../images/k8s-dev/k8s-api-request-lifecycle.png)
+![https://bxdc-static.oss-cn-beijing.aliyuncs.com/images/k8s-api-request-lifecycle.png](../../../images/k8s-dev/k8s-api-request-lifecycle.png)
 
 上图是 Kubernetes API 处理请求的整个流程：
 

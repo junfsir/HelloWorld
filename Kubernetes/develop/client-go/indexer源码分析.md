@@ -162,7 +162,7 @@ index-pod-3
 
 可能最容易混淆的是 Indexers 和 Indices 这两个概念，因为平时很多时候我们没有怎么区分二者的关系，这里我们可以这样理解：Indexers 是存储索引的，Indices 里面是存储的真正的数据（对象键），这样可能更好理解。
 
-![https://bxdc-static.oss-cn-beijing.aliyuncs.com/images/client-go-indexer-arch.png](../../images/k8s-dev/client-go-indexer-arch.png)
+![https://bxdc-static.oss-cn-beijing.aliyuncs.com/images/client-go-indexer-arch.png](../../../images/k8s-dev/client-go-indexer-arch.png)
 
 按照上面的理解我们可以得到上面示例的索引数据如下所示：
 
