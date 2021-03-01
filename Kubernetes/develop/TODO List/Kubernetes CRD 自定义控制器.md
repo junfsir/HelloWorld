@@ -6,7 +6,7 @@
 
 这里我们来针对前面课程中介绍的 CronTab 自定义资源对象编写一个自定义的控制器，对应的资源清单文件如下所示：
 
-```
+```yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
@@ -42,7 +42,7 @@ spec:
 
 我们需要针对上面的规范来定义资源结构，首先初始化项目：
 
-```
+```shell
 $ mkdir -p github.com/cnych/controller-demo && cd github.com/cnych/controller-demo
 # 初始化项目
 $ go mod init github.com/cnych/controller-demo
@@ -72,7 +72,7 @@ package v1beta1
 
 然后就是非常重要的资源对象的结构体定义，新建 `type.go` 文件，内容如下所示：
 
-```
+```go
 package v1beta1
 
 import (
@@ -115,7 +115,7 @@ type CronTabList struct {
 
 然后可以参考系统内置的资源对象，还需要提供 AddToScheme 与 Resource 两个变量供 client 注册，新建 `register.go` 文件，内容如下所示：
 
-```
+```go
 package v1beta1
 
 import (
@@ -195,7 +195,7 @@ import _ "k8s.io/code-generator"
 
 然后新建 `update-codegen.sh` 脚本，用来配置代码生成的脚本：
 
-```
+```shell
 #!/usr/bin/env bash
 
 set -o errexit
@@ -217,7 +217,7 @@ bash "${CODEGEN_PKG}"/generate-groups.sh "deepcopy,client,informer,lister" \
 
 同样还有上节课提到的 `verify-codegen.sh` 脚本，用来校验生成的代码是否是最新的：
 
-```
+```shell
 #!/usr/bin/env bash
 
 set -o errexit
@@ -352,7 +352,7 @@ pkg
 
 可以参考前面编写控制器的方式，首先要先获取访问资源对象的 ClientSet，在项目根目录下面新建 main.go 文件
 
-```
+```go
 package main
 
 import (
@@ -468,7 +468,7 @@ func main() {
 
 在项目根目录下新建 `controller.go` 文件，内容如下所示：
 
-```
+```go
 package main
 
 import (

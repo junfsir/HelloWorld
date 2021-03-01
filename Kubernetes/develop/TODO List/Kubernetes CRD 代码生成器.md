@@ -10,7 +10,7 @@
 
 如果说只是对 CRD 资源本身进行 CRUD 操作的话，不需要 Controller 也是可以实现的，相当于就是只有数据存入了 etcd 中，而没有对这个数据的相关操作而已。比如我们可以定义一个如下所示的 CRD 资源清单文件：
 
-```
+```yaml
 # crd-demo.yaml
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -59,21 +59,21 @@ spec:
 
 同样现在我们可以直接使用 kubectl 来创建这个 CRD 资源清单：
 
-```
+```shell
 $ kubectl apply -f crd-demo.yaml
 customresourcedefinition.apiextensions.k8s.io/crontabs.stable.example.com created
 ```
 
 这个时候我们可以查看到集群中已经有我们定义的这个 CRD 资源对象了：
 
-```
+```shell
 $ kubectl get crd |grep example
 crontabs.stable.example.com                      2019-12-19T02:37:54Z
 ```
 
 这个时候一个新的 namespace 级别的 RESTful API 就会被创建：
 
-```
+```shell
 /apis/stable/example.com/v1beta1/namespaces/*/crontabs/...
 ```
 
@@ -81,7 +81,7 @@ crontabs.stable.example.com                      2019-12-19T02:37:54Z
 
 现在在 Kubernetes 集群中我们就多了一种新的资源叫做 `crontabs.stable.example.com`，我们就可以使用它来定义一个 `CronTab` 资源对象了，这个自定义资源对象里面可以包含的字段我们在定义的时候通过 `schema` 进行了规范，比如现在我们来创建一个如下所示的资源清单：
 
-```
+```yaml
 # crd-crontab-demo.yaml
 apiVersion: "stable.example.com/v1beta1"
 kind: CronTab
@@ -94,14 +94,14 @@ spec:
 
 我们可以直接创建这个对象：
 
-```
+```shell
 $ kubectl apply -f crd-crontab-demo.yaml
 crontab.stable.example.com/my-new-cron-object created
 ```
 
 然后我们就可以用 kubectl 来管理我们这里创建 CronTab 对象了，比如：
 
-```
+```shell
 $ kubectl get ct  # 简写
 NAME                 AGE
 my-new-cron-object   42s
@@ -114,7 +114,7 @@ my-new-cron-object   88s
 
 我们也可以查看创建的这个对象的原始 YAML 数据：
 
-```
+```shell
 $ kubectl get ct -o yaml
 apiVersion: v1
 items:
@@ -148,7 +148,7 @@ metadata:
 
 要实现自己的控制器原理比较简单，前面我们也介绍过如何编写控制器，最重要的就是要去实现 ListAndWatch 操作、获取资源的 Informer 和 Indexer、以及通过一个 workqueue 去接收事件来进行处理，所以我们就要想办法来编写我们自定义的 CRD 资源对应的 Informer、ClientSet 这些工具，前面我们已经了解了对于内置的 Kubernetes 资源对象这些都是已经内置到源码中了，对于我们自己的 CRD 资源肯定不会内置到源码中的，所以就需要我们自己去实现，比如要为 CronTab 这个资源对象实现一个 `DeepCopyObject` 函数，这样才会将我们自定义的对象转换成 `runtime.Object`，系统才能够识别，但是客户端相关的操作实现又非常多，而且实现方式基本上都是一致的，所以 Kubernetes 就为我们提供了代码生成器这样的工具，我们可以来自动生成客户端访问的一些代码，比如 Informer、ClientSet 等等。
 
-![图片](/Users/jeason/Data/HelloWorld/images/client-go/client-go-controller-interaction.jpeg)
+![图片](../../../images/client-go/client-go-controller-interaction.jpeg)
 
 ### code-generator
 
@@ -168,7 +168,7 @@ code-generator 还包含一些其它的代码生成器，例如 Conversion-gen �
 
 在开发 CRD 的控制器的时候，我们可以编写一个脚本来统一调用生成器生成代码，我们可以直接使用 sample-controller 仓库中提供的 hack/update-codegen.sh 脚本。
 
-```
+```shell
 #!/usr/bin/env bash
 
 set -o errexit
@@ -198,7 +198,7 @@ bash "${CODEGEN_PKG}"/generate-groups.sh "deepcopy,client,informer,lister" \
 
 我们还可以进一步提供 `hack/verify-codegen.sh` 脚本，用于判断生成的代码是否 up-to-date：
 
-```
+```shell
 #!/usr/bin/env bash
 
 set -o errexit
@@ -275,7 +275,7 @@ package v1
 
 要么直接声明在类型之前，要么位于类型之前的第二个注释块中。下面的 `types.go` 中声明了 CR 对应的类型：
 
-```
+```go
 // 为当前类型生成客户端，如果不加此注解则无法生成 lister、informer 等包
 // +genclient
  

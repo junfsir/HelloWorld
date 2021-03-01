@@ -155,3 +155,8 @@ Serverless 要做到所有的用户容器或函数按需使用计算资源, 那�
 # 结尾
 
 这次的内容是越写越多, 感觉怎么都写不完的样子, rkt, lxd 其实都还没涉及, 这里就提供下类比, 大家可以自行做拓展阅读: rkt 跟 docker 一样是一个容器引擎, 特点是无 daemon, 目前项目基本不活跃了; lxc 是 docker 最早使用的容器工具集, 位置可以类比 runc, 提供跟 kernel 打交道的库&命令行工具, lxd 则是基于 lxc 的一个容器引擎, 只不过大多数容器引擎的目标是容器化应用, lxd 的目标则是容器化操作系统.
+
+// kubernetes 1.20之后不再支持docker
+
+[Don't Panic: Kubernetes and Docker](https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/)
+
