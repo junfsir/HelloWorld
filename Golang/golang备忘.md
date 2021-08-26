@@ -153,6 +153,7 @@ reflect.TypeOf()
 ```go
 type name = string // 类型别名
 type name string   // 类型定义
+它们直接可以强制类型转换，却不会隐式转换
 ```
 
 - `type name string` 将`name`定义为一个新的类型，该类型拥有和`string`一样的特性，但是两者是不用的类型，不可用`+`进行拼接等运算；
