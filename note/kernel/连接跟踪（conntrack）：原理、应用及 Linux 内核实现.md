@@ -1,4 +1,4 @@
-# [连接跟踪（conntrack）：原理、应用及 Linux 内核实现](http://arthurchiao.art/blog/conntrack-design-and-implementation-zh/#2-netfilter-hook-%E6%9C%BA%E5%88%B6%E5%AE%9E%E7%8E%B0)
+# [连接跟踪（conntrack）：原理、应用及 Linux 内核实现](http://arthurchiao.art/blog/conntrack-design-and-implementation-zh/)
 
 ## 摘要
 
